@@ -4,13 +4,13 @@ import fs from 'node:fs';
 import { building } from '$app/environment';
 
 export const load = async ({ fetch, params }) => {
+	const { lang, slugdate } = params;
+	let blogPost: any; // TODO: use zod to type this
 
 	if (building) {
-    // Server-side datga loading via fs.readdir
+		// Server-side datga loading via fs.readdir
 
-		const { lang, slug } = params;
-
-		const parsed = slug.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
+		const parsed = slugdate.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
 
 		if (!parsed) {
 			error(404, 'Not Found');
@@ -29,30 +29,33 @@ export const load = async ({ fetch, params }) => {
 		try {
 			const jsonStr = await fs.promises.readFile(fullName, 'utf8');
 			console.log('Server!', jsonStr);
-			return JSON.parse(jsonStr);
+			blogPost =  JSON.parse(jsonStr);
 		} catch (error) {
 			console.log(error);
 			throw error;
 		}
 	} else {
-    // Client-side data loading via HTTP fetch
+		// Client-side data loading via HTTP fetch
 
-		const { lang, slug } = params;
+		const { lang, slugdate } = params;
 
-		const parsed = slug.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
+		const parsed = slugdate.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
 
 		if (!parsed) {
 			error(404, 'Not Found');
 		}
 
-		const [, name, date] = parsed;
-		const fullName = `/content/blog-post/${date}-${lang}-${name}.json`;
+		const [, slug, date] = parsed;
+		const fullName = `/content/blog-post/${date}-${lang}-${slug}.json`;
 
 		const response = await fetch(fullName);
-		const json = await response.json();
+		blogPost = await response.json();
 
-		console.log('Client!', json);
-
-		return json;
+		console.log('Client!', blogPost);
 	}
+
+	return {
+		lang,
+		blogPost
+	};
 };

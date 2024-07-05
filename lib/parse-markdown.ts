@@ -12,15 +12,14 @@ export interface ParseMarkdownConfig {
 	sourceDir?: string;
 	outputDir?: string;
 	markdownItOptions?: MarkdownItOptions;
-	entities: Record<
-		string,
-		{
-			individual: boolean;
-			index: boolean;
-			htmlInIndex?: boolean;
-			paginationInIndex?: number;
-		}
-	>;
+	entities: Record<string, EntityConfig>;
+}
+
+export interface EntityConfig {
+	individual: boolean;
+	index: boolean;
+	htmlInIndex?: boolean;
+	paginationInIndex?: number;
 }
 
 export interface MyFile {
@@ -30,13 +29,17 @@ export interface MyFile {
 }
 
 export interface Entity {
-	slug: string;
+	fileName: string;
 	attributes: unknown;
-	html: string;
+	html?: string;
+	slug: string;
+	lang: string;
+	date?: string;
+	urlName?: string;
 }
 
 interface FrontMatterResultWithSlug<T> extends FrontMatterResult<T> {
-	slug: string;
+	fileName: string;
 }
 
 const parseMarkdown = (config: ParseMarkdownConfig) => {
@@ -47,18 +50,18 @@ const parseMarkdown = (config: ParseMarkdownConfig) => {
 			const sourceDir = config.sourceDir ?? path.resolve(cwd, 'content');
 			const outputDir = config.outputDir ?? path.resolve(cwd, 'static/content');
 
-			for (const entity in config.entities) {
+			for (const entityName in config.entities) {
 				const { individual, index /* , htmlInIndex, paginationInIndex */ } =
-					config.entities[entity];
+					config.entities[entityName];
 
 				assert(
 					individual || index,
-					`At least one of 'individual' or 'index' must be true for entity '${entity}'`
+					`At least one of 'individual' or 'index' must be true for entity '${entityName}'`
 				);
 
-				const entitySourceDir = path.join(sourceDir, entity);
-				const entityOutputDir = path.join(outputDir, entity);
-				console.log('entityOutputDir', entityOutputDir)
+				const entitySourceDir = path.join(sourceDir, entityName);
+				const entityOutputDir = path.join(outputDir, entityName);
+				console.log('entityOutputDir', entityOutputDir);
 				await mkdirIfNotExists(entityOutputDir);
 
 				const files: MyFile[] = await readFiles(entitySourceDir);
@@ -67,13 +70,18 @@ const parseMarkdown = (config: ParseMarkdownConfig) => {
 					(file: MyFile): FrontMatterResultWithSlug<unknown> => {
 						return {
 							...Frontmatter(file.content),
-							slug: file.fileName.replace(/\.md$/, '')
+							fileName: file.fileName.replace(/\.md$/, '')
 						};
 					}
 				);
 
-				if (individual) {
-					await generateIndividualMarkdownFiles(frontMattersWithSlug, entityOutputDir, config);
+				if (individual || index) {
+					await generateFiles(
+						frontMattersWithSlug,
+						entityOutputDir,
+						config,
+						config.entities[entityName]
+					);
 				}
 			}
 		}
@@ -108,10 +116,11 @@ export const mkdirIfNotExists = async (
 	}
 };
 
-const generateIndividualMarkdownFiles = async (
+export const generateFiles = async (
 	frontMattersWithSlug: FrontMatterResultWithSlug<unknown>[],
 	outputDir: string,
-	config: ParseMarkdownConfig
+	config: ParseMarkdownConfig,
+	entityConfig: EntityConfig
 ) => {
 	const markdownCompiler = new MarkdownIt({
 		...(config.markdownItOptions ?? {}),
@@ -120,18 +129,56 @@ const generateIndividualMarkdownFiles = async (
 
 	const entities: Entity[] = frontMattersWithSlug.map(
 		(fm: FrontMatterResultWithSlug<unknown>): Entity => {
+			const parsed = fm.fileName.match(/^(?:(\d\d\d\d-\d\d-\d\d)-)?(\w\w)-(.+)$/);
+
+			assert(parsed, 'Invalid filename format');
+
+			const [, date, lang, slug] = parsed;
+
 			return {
 				attributes: fm.attributes,
 				html: markdownCompiler.render(fm.body),
-				slug: fm.slug
+				fileName: fm.fileName,
+				date,
+				lang,
+				slug,
+				urlName: date ? `${slug}-${date}` : slug,
 			};
 		}
 	);
 
-	for (const entity of entities) {
-		const outputFilePath = path.join(outputDir, `${entity.slug}.json`);
-		const entityStr = JSON.stringify(entity, null, 2);
-		await fs.promises.writeFile(outputFilePath, entityStr);
+	if (entityConfig.individual) {
+		for (const entity of entities) {
+			const outputFilePath = path.join(outputDir, `${entity.fileName}.json`);
+			const entityStr = JSON.stringify(entity, null, 2);
+			await fs.promises.writeFile(outputFilePath, entityStr);
+		}
+	}
+
+	if (entityConfig.index) {
+		const index = entityConfig.htmlInIndex
+			? entities
+			: entities.map((entity) => ({ ...entity, html: undefined }));
+
+		const indexesPerLanguage: Record<string, Entity[]> = index.reduce(
+			(result: Record<string, Entity[]>, entity: Entity) => {
+				if (!result[entity.lang]) {
+					result[entity.lang] = [];
+				}
+
+				result[entity.lang].push(entity);
+
+				return result;
+			},
+			{}
+		);
+
+		for (const lang in indexesPerLanguage) {
+			const indexLang = indexesPerLanguage[lang];
+			const outputFilePath = path.join(outputDir, `index-${lang}.json`);
+			const indexStr = JSON.stringify(indexLang, null, 2);
+			await fs.promises.writeFile(outputFilePath, indexStr);
+		}
 	}
 };
 
