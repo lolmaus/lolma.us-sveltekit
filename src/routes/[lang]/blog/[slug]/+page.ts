@@ -1,54 +1,58 @@
-import { error, type LoadEvent } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import path from 'node:path';
 import fs from 'node:fs';
 import { building } from '$app/environment';
-import type { PageParentData, RouteParams } from './$types';
 
-export const load = building
-	? async ({ params }: LoadEvent<RouteParams, null, PageParentData, "/[lang]/blog/[slug]">) => {
-			const { lang, slug } = params;
+export const load = async ({ fetch, params }) => {
 
-			const parsed = slug.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
+	if (building) {
+    // Server-side datga loading via fs.readdir
 
-			if (!parsed) {
-				error(404, 'Not Found');
-			}
+		const { lang, slug } = params;
 
-			const [, name, date] = parsed;
-			const cwd = process.cwd();
-			const fullName = path.join(
-				cwd,
-				'static',
-				'content',
-				'blog-post',
-				`${date}-${lang}-${name}.json`
-			);
+		const parsed = slug.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
 
-			try {
-				const jsonStr = await fs.promises.readFile(fullName, 'utf8');
-				console.log('Server!', jsonStr);
-				return JSON.parse(jsonStr);
-			} catch (error) {
-				console.log(error);
-				throw error;
-			}
+		if (!parsed) {
+			error(404, 'Not Found');
 		}
-	: async ({ fetch, params }: LoadEvent<RouteParams, null, PageParentData, "/[lang]/blog/[slug]">) => {
-			const { lang, slug } = params;
 
-			const parsed = slug.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
+		const [, name, date] = parsed;
+		const cwd = process.cwd();
+		const fullName = path.join(
+			cwd,
+			'static',
+			'content',
+			'blog-post',
+			`${date}-${lang}-${name}.json`
+		);
 
-			if (!parsed) {
-				error(404, 'Not Found');
-			}
+		try {
+			const jsonStr = await fs.promises.readFile(fullName, 'utf8');
+			console.log('Server!', jsonStr);
+			return JSON.parse(jsonStr);
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+	} else {
+    // Client-side data loading via HTTP fetch
 
-			const [, name, date] = parsed;
-			const fullName = `/content/blog-post/${date}-${lang}-${name}.json`;
+		const { lang, slug } = params;
 
-			const response = await fetch(fullName);
-			const json = await response.json();
+		const parsed = slug.match(/^(.+)-(\d\d\d\d-\d\d-\d\d)$/);
 
-			console.log('Client!', json);
+		if (!parsed) {
+			error(404, 'Not Found');
+		}
 
-			return json;
-		};
+		const [, name, date] = parsed;
+		const fullName = `/content/blog-post/${date}-${lang}-${name}.json`;
+
+		const response = await fetch(fullName);
+		const json = await response.json();
+
+		console.log('Client!', json);
+
+		return json;
+	}
+};
