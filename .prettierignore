@@ -4,3 +4,4 @@ package-lock.json
 yarn.lock
 .pnpm-store/
 .vercel/
+/static/content/

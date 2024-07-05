@@ -48,7 +48,8 @@
 				"vitest.explorer",
 				"macabeus.vscode-fluent",
 				"tomoki1207.vscode-input-sequence",
-				"EditorConfig.EditorConfig"
+				"EditorConfig.EditorConfig",
+				"esbenp.prettier-vscode"
 			]
 		}
 	}
