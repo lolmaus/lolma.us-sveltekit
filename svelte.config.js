@@ -13,8 +13,8 @@ const config = {
 		adapter: adapter(),
 
 		prerender: {
-			entries: crawlMarkdownEntries(),
-			handleHttpError: 'ignore'
+			crawl: false,
+			entries: crawlMarkdownEntries()
 		}
 	}
 };
