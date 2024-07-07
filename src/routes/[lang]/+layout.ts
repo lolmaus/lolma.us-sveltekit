@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { FluentBundle, FluentResource } from '@fluent/bundle';
-import { createSvelteFluent, initFluentContext } from '@nubolab-ffwd/svelte-fluent';
+import { createSvelteFluent } from '@nubolab-ffwd/svelte-fluent';
 
 
 export async function load({ params }) {
