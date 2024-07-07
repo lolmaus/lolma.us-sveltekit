@@ -5,6 +5,7 @@ import Frontmatter, { type FrontMatterResult } from 'front-matter';
 import assert from 'tiny-invariant';
 import type { MakeDirectoryOptions, PathLike } from 'node:fs';
 import EsExtensionsNode from '@yamato-daiwa/es-extensions-nodejs';
+import type { Entity } from '$lib/entities';
 
 const { isErrnoException } = EsExtensionsNode;
 
@@ -26,16 +27,6 @@ export interface MyFile {
 	fileName: string;
 	fullName: string;
 	content: string;
-}
-
-export interface Entity {
-	fileName: string;
-	attributes: unknown;
-	html?: string;
-	slug: string;
-	lang: string;
-	date?: string;
-	urlName?: string;
 }
 
 interface FrontMatterResultWithSlug<T> extends FrontMatterResult<T> {
