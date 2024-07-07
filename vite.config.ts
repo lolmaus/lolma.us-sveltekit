@@ -1,3 +1,4 @@
+import svelteFluent from '@nubolab-ffwd/svelte-fluent/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import parseMarkdown from './lib/parse-markdown';
@@ -13,7 +14,7 @@ const markdownOptions = {
 }
 
 export default defineConfig({
-	plugins: [sveltekit(), parseMarkdown(markdownOptions)],
+	plugins: [svelteFluent(), sveltekit(), parseMarkdown(markdownOptions)],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	}
