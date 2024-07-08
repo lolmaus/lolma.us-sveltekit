@@ -1,6 +1,6 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
-import parseMarkdown from './lib/parse-markdown';
+import parseMarkdown from './lib/utils/parse-markdown';
 import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 
 const markdownOptions = {

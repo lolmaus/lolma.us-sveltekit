@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-import { crawlMarkdownEntries } from './lib/crawl-markdown-entries.js';
+import { crawlMarkdownEntries } from './lib/utils/crawl-markdown-entries.js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
