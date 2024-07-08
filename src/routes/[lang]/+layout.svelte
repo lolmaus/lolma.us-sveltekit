@@ -1,22 +1,19 @@
 <script lang="ts">
-	import { initFluentContext, Localized } from "@nubolab-ffwd/svelte-fluent";
-	import type { PageData } from "./$types";
-	import type { Snippet } from "svelte";
-  
-	let { data, children }: { data: PageData; children: Snippet } = $props();
+	import { initFluentContext, Localized } from '@nubolab-ffwd/svelte-fluent';
+	import type { PageData } from './$types';
+	import type { Snippet } from 'svelte';
+
+	let { data, children, header }: { data: PageData; children: Snippet; header: Snippet } = $props();
 
 	initFluentContext(() => data.fluent);
 </script>
 
-<Localized id="hello"/>
+<Localized id="hello" />
 
-<ul>
-  <li>
-    <a href="/en">English</a>
-  </li>
-  <li>
-    <a href="/ru">Русский</a>
-  </li>
-</ul>
+<div>
+	<p>Children</p>
 
-{@render children()}
+	{#if children}
+		{@render children()}
+	{/if}
+</div>
