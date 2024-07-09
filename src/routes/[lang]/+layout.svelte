@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { initFluentContext, Localized } from '@nubolab-ffwd/svelte-fluent';
+	import { initFluentContext } from '@nubolab-ffwd/svelte-fluent';
 	import type { PageData } from './$types';
 	import type { Snippet } from 'svelte';
 
@@ -8,12 +8,4 @@
 	initFluentContext(() => data.fluent);
 </script>
 
-<Localized id="hello" />
-
-<div>
-	<p>Children</p>
-
-	{#if children}
-		{@render children()}
-	{/if}
-</div>
+{@render children()}
