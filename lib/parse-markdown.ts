@@ -52,7 +52,7 @@ const parseMarkdown = (config: ParseMarkdownConfig) => {
 
 				const entitySourceDir = path.join(sourceDir, entityName);
 				const entityOutputDir = path.join(outputDir, entityName);
-				console.log('entityOutputDir', entityOutputDir);
+
 				await mkdirIfNotExists(entityOutputDir);
 
 				const files: MyFile[] = await readFiles(entitySourceDir);
@@ -133,7 +133,7 @@ export const generateFiles = async (
 				date,
 				lang,
 				slug,
-				urlName: date ? `${slug}-${date}` : slug,
+				urlName: date ? `${slug}-${date}` : slug
 			};
 		}
 	);

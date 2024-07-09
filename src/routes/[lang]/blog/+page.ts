@@ -1,5 +1,3 @@
-import path from 'node:path';
-import fs from 'node:fs';
 import { building } from '$app/environment';
 import { BlogPostsIndexSchema } from '$lib/entities.js';
 
@@ -9,29 +7,38 @@ export const load = async ({ fetch, params }) => {
 
 	if (building) {
 		// Server-side datga loading via fs.readdir
+		const { join } = await import('node:path');
+		const { promises } = await import('node:fs');
 
 		const cwd = process.cwd();
-		const fullName = path.join(cwd, 'static', 'content', 'blog-post', `index-${lang}.json`);
+		const fullName = join(cwd, 'static', 'content', 'blog-post', `index-${lang}.json`);
 
 		try {
-			const jsonStr = await fs.promises.readFile(fullName, 'utf8');
-			console.log('Server!', jsonStr);
+			const jsonStr = await promises.readFile(fullName, 'utf8');
       blogPostsRaw = JSON.parse(jsonStr);
 		} catch (error) {
-			console.log(error);
-			throw error;
+			const { default: EsExtensionsNode } = await import('@yamato-daiwa/es-extensions-nodejs');
+
+			if (EsExtensionsNode.isErrnoException(error)) {
+				blogPostsRaw = [];
+			} else {
+				throw error;
+			}
 		}
 	} else {
 		// Client-side data loading via HTTP fetch
 
 		const { lang } = params;
-
 		const fullName = `/content/blog-post/index-${lang}.json`;
-
 		const response = await fetch(fullName);
-		blogPostsRaw = await response.json();
 
-		console.log('Client!', blogPostsRaw);
+		if (response.ok) {
+			blogPostsRaw = await response.json();
+		} else if (response.status === 404) {
+			blogPostsRaw = [];
+		} else {
+			throw new Error(response.statusText);
+		}
 	}
 
 	const blogPosts = BlogPostsIndexSchema.parse(blogPostsRaw);
