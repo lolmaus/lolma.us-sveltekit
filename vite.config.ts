@@ -1,6 +1,6 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
-import parseMarkdown from './lib/utils/parse-markdown';
+import generateJsonFromMarkdown from './lib/utils/generate-json-from-markdown';
 import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 
 const markdownOptions = {
@@ -14,7 +14,7 @@ const markdownOptions = {
 }
 
 export default defineConfig({
-	plugins: [sveltekit(), parseMarkdown(markdownOptions), purgeCss()],
+	plugins: [sveltekit(), generateJsonFromMarkdown(markdownOptions), purgeCss()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	}
