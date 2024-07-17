@@ -6,7 +6,7 @@ import assert from 'tiny-invariant';
 import type { MakeDirectoryOptions, PathLike } from 'node:fs';
 import EsExtensionsNode from '@yamato-daiwa/es-extensions-nodejs';
 import type { Entity } from '$lib/entities';
-import type { Plugin } from 'vite';
+import type { Plugin, ViteDevServer } from 'vite';
 
 const { isErrnoException } = EsExtensionsNode;
 
@@ -35,27 +35,29 @@ interface FrontMatterResultWithSlug<T> extends FrontMatterResult<T> {
 }
 
 const rollupPluginGenerateJsonFromMarkdown = (config: ParseMarkdownConfig): Plugin => {
+	let server: ViteDevServer;
+
 	async function generateJsonFromMarkdown() {
 		const cwd = process.cwd();
 		const sourceDir = config.sourceDir ?? path.resolve(cwd, 'content');
 		const outputDir = config.outputDir ?? path.resolve(cwd, 'static/content');
-	
+
 		for (const entityName in config.entities) {
 			const { individual, index /* , htmlInIndex, paginationInIndex */ } =
 				config.entities[entityName];
-	
+
 			assert(
 				individual || index,
 				`At least one of 'individual' or 'index' must be true for entity '${entityName}'`
 			);
-	
+
 			const entitySourceDir = path.join(sourceDir, entityName);
 			const entityOutputDir = path.join(outputDir, entityName);
-	
+
 			await mkdirIfNotExists(entityOutputDir);
-	
+
 			const files: MyFile[] = await readFiles(entitySourceDir);
-	
+
 			const frontMattersWithSlug: FrontMatterResultWithSlug<unknown>[] = files.map(
 				(file: MyFile): FrontMatterResultWithSlug<unknown> => {
 					return {
@@ -64,7 +66,7 @@ const rollupPluginGenerateJsonFromMarkdown = (config: ParseMarkdownConfig): Plug
 					};
 				}
 			);
-	
+
 			if (individual || index) {
 				await generateFiles(
 					frontMattersWithSlug,
@@ -78,20 +80,31 @@ const rollupPluginGenerateJsonFromMarkdown = (config: ParseMarkdownConfig): Plug
 
 	return {
 		name: 'rollup-plugin-parse-markdown',
+
+		configureServer(s) {
+      // Save the server instance for later use
+      server = s;
+    },
+
 		async buildStart() {
 			return generateJsonFromMarkdown();
 		},
 
-		async watchChange(id, cahnge) {
-			console.log('watchChange', id, cahnge);
-
+		async watchChange(id): Promise<void> {
 			const cwd = process.cwd();
 			const sourceDir = config.sourceDir ?? path.resolve(cwd, 'content');
 
 			if (id.startsWith(sourceDir) && id.endsWith('.md')) {
-				return generateJsonFromMarkdown();		
-			}	
-		},
+				await generateJsonFromMarkdown();
+
+        if (server) {
+          server.ws.send({
+            type: 'full-reload',
+            path: '*',
+          });
+        }
+			}
+		}
 	} satisfies Plugin;
 };
 
@@ -138,7 +151,10 @@ export const generateFiles = async (
 		(fm: FrontMatterResultWithSlug<unknown>): Entity => {
 			const parsed = fm.fileName.match(/^(?:(\d\d\d\d-\d\d-\d\d)-)?(\w\w)-(.+)$/);
 
-			assert(parsed, 'Invalid filename format, expected 2024-01-01-en-whaterver.md or en-whatever.md');
+			assert(
+				parsed,
+				'Invalid filename format, expected 2024-01-01-en-whaterver.md or en-whatever.md'
+			);
 
 			const [, date, lang, slug] = parsed;
 

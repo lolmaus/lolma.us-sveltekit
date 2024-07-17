@@ -29,7 +29,7 @@ export const load = async ({ fetch, params }) => {
 
 		const jsonStr = await promises.readFile(fullName, 'utf8');
 		blogPostRaw = JSON.parse(jsonStr);
-	} else {
+	} else { 
 		// Client-side data loading via HTTP fetch
 		const fullName = `/content/blog-post/${date}-${lang}-${slug}.json`;
 		const response = await fetch(fullName);

@@ -1,3 +1,85 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.gradient-heading {
+	@apply box-decoration-clone bg-clip-text text-transparent;
+	/* Direction */
+	@apply bg-gradient-to-br;
+	/* Color Stops */
+	@apply from-primary-500 via-tertiary-500 to-secondary-500;
+}
+
+.prose h1 {
+	@apply h1;
+}
+
+.prose h2 {
+	@apply h2;
+}
+
+.prose h3 {
+	@apply h3;
+}
+
+.prose h4 {
+	@apply h4;
+}
+
+.prose h5 {
+	@apply h5;
+}
+
+.prose h6 {
+	@apply h6;
+}
+
+.prose li, p {
+	margin-top: 0.5em;
+}
+
+.prose ul, .prose ol {
+	margin-left: 2em;
+	list-style: disc outside
+}
+
+.prose-0 h2 {
+	@apply h1;
+}
+
+.prose-0 h3 {
+	@apply h2;
+}
+
+.prose-0 h4 {
+	@apply h3;
+}
+
+.prose-0 h5 {
+	@apply h4;
+}
+
+.prose-0 h6 {
+	@apply h5;
+}
+
+
+.prose-2 h1 {
+	@apply h2;
+}
+
+.prose-2 h2 {
+	@apply h3;
+}
+
+.prose-2 h3 {
+	@apply h4;
+}
+
+.prose-2 h4 {
+	@apply h5;
+}
+
+.prose-2 h5 {
+	@apply h6;
+}

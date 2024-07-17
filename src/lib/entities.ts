@@ -10,6 +10,8 @@ export const EntitySchema = z.object({
   urlName: z.string(),
 });
 
+export const EntitiesSchema = z.array(EntitySchema);
+
 export type Entity = z.infer<typeof EntitySchema>;
 
 export const BlogPostInIndexSchema = EntitySchema.extend({
