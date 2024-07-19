@@ -8,19 +8,19 @@ const markdownOptions = {
 		'blog-post': {
 			individual: true,
 			index: true,
-			htmlInIndex: false
+			htmlInIndex: false,
 		},
 		'index-item': {
 			individual: false,
 			index: true,
-			htmlInIndex: true
-		}
-	}
+			htmlInIndex: true,
+		},
+	},
 };
 
 export default defineConfig({
 	plugins: [sveltekit(), generateJsonFromMarkdown(markdownOptions), purgeCss()],
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+		include: ['src/**/*.{test,spec}.{js,ts}'],
+	},
 });

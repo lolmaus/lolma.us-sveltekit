@@ -15,7 +15,7 @@ export const load = async ({ params, fetch }) => {
 
 		try {
 			const jsonStr = await promises.readFile(fullName, 'utf8');
-      indexItemsRaw = JSON.parse(jsonStr);
+			indexItemsRaw = JSON.parse(jsonStr);
 		} catch (error) {
 			const { default: EsExtensionsNode } = await import('@yamato-daiwa/es-extensions-nodejs');
 
@@ -44,4 +44,4 @@ export const load = async ({ params, fetch }) => {
 	const indexItems = EntitiesSchema.parse(indexItemsRaw);
 
 	return { indexItems, lang };
-}
+};

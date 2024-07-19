@@ -15,7 +15,7 @@ export const load = async ({ fetch, params }) => {
 
 		try {
 			const jsonStr = await promises.readFile(fullName, 'utf8');
-      blogPostsRaw = JSON.parse(jsonStr);
+			blogPostsRaw = JSON.parse(jsonStr);
 		} catch (error) {
 			const { default: EsExtensionsNode } = await import('@yamato-daiwa/es-extensions-nodejs');
 
