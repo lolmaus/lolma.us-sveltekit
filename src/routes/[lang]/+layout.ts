@@ -18,5 +18,6 @@ export async function load({ params }) {
 
   return {
 	 fluent: createSvelteFluent([bundle]),
+   lang,
   };
 }

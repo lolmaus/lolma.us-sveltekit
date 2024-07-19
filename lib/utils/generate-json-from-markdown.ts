@@ -6,6 +6,7 @@ import assert from 'tiny-invariant';
 import type { MakeDirectoryOptions, PathLike } from 'node:fs';
 import EsExtensionsNode from '@yamato-daiwa/es-extensions-nodejs';
 import type { Entity } from '$lib/entities';
+import type { Plugin, ViteDevServer } from 'vite';
 
 const { isErrnoException } = EsExtensionsNode;
 
@@ -33,50 +34,78 @@ interface FrontMatterResultWithSlug<T> extends FrontMatterResult<T> {
 	fileName: string;
 }
 
-const parseMarkdown = (config: ParseMarkdownConfig) => {
-	return {
-		name: 'rollup-plugin-parse-markdown',
-		async buildStart() {
-			const cwd = process.cwd();
-			const sourceDir = config.sourceDir ?? path.resolve(cwd, 'content');
-			const outputDir = config.outputDir ?? path.resolve(cwd, 'static/content');
+const rollupPluginGenerateJsonFromMarkdown = (config: ParseMarkdownConfig): Plugin => {
+	let server: ViteDevServer;
 
-			for (const entityName in config.entities) {
-				const { individual, index /* , htmlInIndex, paginationInIndex */ } =
-					config.entities[entityName];
+	async function generateJsonFromMarkdown() {
+		const cwd = process.cwd();
+		const sourceDir = config.sourceDir ?? path.resolve(cwd, 'content');
+		const outputDir = config.outputDir ?? path.resolve(cwd, 'static/content');
 
-				assert(
-					individual || index,
-					`At least one of 'individual' or 'index' must be true for entity '${entityName}'`
-				);
+		for (const entityName in config.entities) {
+			const { individual, index /* , htmlInIndex, paginationInIndex */ } =
+				config.entities[entityName];
 
-				const entitySourceDir = path.join(sourceDir, entityName);
-				const entityOutputDir = path.join(outputDir, entityName);
+			assert(
+				individual || index,
+				`At least one of 'individual' or 'index' must be true for entity '${entityName}'`
+			);
 
-				await mkdirIfNotExists(entityOutputDir);
+			const entitySourceDir = path.join(sourceDir, entityName);
+			const entityOutputDir = path.join(outputDir, entityName);
 
-				const files: MyFile[] = await readFiles(entitySourceDir);
+			await mkdirIfNotExists(entityOutputDir);
 
-				const frontMattersWithSlug: FrontMatterResultWithSlug<unknown>[] = files.map(
-					(file: MyFile): FrontMatterResultWithSlug<unknown> => {
-						return {
-							...Frontmatter(file.content),
-							fileName: file.fileName.replace(/\.md$/, '')
-						};
-					}
-				);
+			const files: MyFile[] = await readFiles(entitySourceDir);
 
-				if (individual || index) {
-					await generateFiles(
-						frontMattersWithSlug,
-						entityOutputDir,
-						config,
-						config.entities[entityName]
-					);
+			const frontMattersWithSlug: FrontMatterResultWithSlug<unknown>[] = files.map(
+				(file: MyFile): FrontMatterResultWithSlug<unknown> => {
+					return {
+						...Frontmatter(file.content),
+						fileName: file.fileName.replace(/\.md$/, '')
+					};
 				}
+			);
+
+			if (individual || index) {
+				await generateFiles(
+					frontMattersWithSlug,
+					entityOutputDir,
+					config,
+					config.entities[entityName]
+				);
 			}
 		}
-	};
+	}
+
+	return {
+		name: 'rollup-plugin-parse-markdown',
+
+		configureServer(s) {
+      // Save the server instance for later use
+      server = s;
+    },
+
+		async buildStart() {
+			return generateJsonFromMarkdown();
+		},
+
+		async watchChange(id): Promise<void> {
+			const cwd = process.cwd();
+			const sourceDir = config.sourceDir ?? path.resolve(cwd, 'content');
+
+			if (id.startsWith(sourceDir) && id.endsWith('.md')) {
+				await generateJsonFromMarkdown();
+
+        if (server) {
+          server.ws.send({
+            type: 'full-reload',
+            path: '*',
+          });
+        }
+			}
+		}
+	} satisfies Plugin;
 };
 
 const readFiles = async (sourcePath: string): Promise<MyFile[]> => {
@@ -122,7 +151,10 @@ export const generateFiles = async (
 		(fm: FrontMatterResultWithSlug<unknown>): Entity => {
 			const parsed = fm.fileName.match(/^(?:(\d\d\d\d-\d\d-\d\d)-)?(\w\w)-(.+)$/);
 
-			assert(parsed, 'Invalid filename format');
+			assert(
+				parsed,
+				'Invalid filename format, expected 2024-01-01-en-whaterver.md or en-whatever.md'
+			);
 
 			const [, date, lang, slug] = parsed;
 
@@ -173,4 +205,4 @@ export const generateFiles = async (
 	}
 };
 
-export default parseMarkdown;
+export default rollupPluginGenerateJsonFromMarkdown;

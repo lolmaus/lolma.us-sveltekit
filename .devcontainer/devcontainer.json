@@ -7,7 +7,7 @@
 	"features": {
 		"ghcr.io/cirolosapio/devcontainers-features/alpine-node:0": {
 			"corepack": true,
-			"pnpmVersion": "9.2.0"
+			"pnpmVersion": "9.5.0"
 		},
 		"ghcr.io/cirolosapio/devcontainers-features/alpine-curl:0": {},
 		"ghcr.io/cirolosapio/devcontainers-features/alpine-gh-cli:0": {},
