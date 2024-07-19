@@ -34,7 +34,10 @@
 			</header>
 			
 			<div class="p-4 prose prose-2">
-				{@html itemsBySlug.resume.html}
+				<!-- ToDo: remove the if condition when ru resume is available -->
+				{#if itemsBySlug.resume}
+					{@html itemsBySlug.resume.html}
+				{/if}
 			</div>
 		</a>
 
