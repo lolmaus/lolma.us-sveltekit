@@ -1,6 +1,12 @@
 <script lang="ts">
-	import { enforceLocale } from '$lib/locale';
-	enforceLocale();
+	// Redirect to lang route
+	$effect(() => {
+		// @ts-expect-error Intentionally checking for non-spec userLanguage
+		const langRaw = navigator.language || navigator.userLanguage || 'en-US';
+		const lang = langRaw.slice(0, 2);
+
+		window.location.replace(`/${lang}/`);
+	});
 </script>
 
 <noscript>
