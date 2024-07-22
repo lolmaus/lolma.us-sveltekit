@@ -9,12 +9,12 @@ export default {
 	darkMode: 'selector',
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
-		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
+		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}'),
 	],
 
-  corePlugins: {
-    aspectRatio: false,
-  },
+	corePlugins: {
+		aspectRatio: false,
+	},
 
 	theme: {
 		containers: {
@@ -73,14 +73,14 @@ export default {
 			bp2500: '312.5rem',
 			bp2600: '325.0rem',
 		},
-		extend: {}
+		extend: {},
 	},
 
 	plugins: [
 		skeleton({
-			themes: { preset: [{ name: 'gold-nouveau', enhancements: true }] }
+			themes: { preset: [{ name: 'gold-nouveau', enhancements: true }] },
 		}),
 		aspectRatio,
 		containerQueries,
-	]
+	],
 } satisfies Config;

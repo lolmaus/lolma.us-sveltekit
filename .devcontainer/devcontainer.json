@@ -2,17 +2,15 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/alpine
 {
 	"name": "Slice and Dice",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:alpine-3.20",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:22",
 	"features": {
-		"ghcr.io/cirolosapio/devcontainers-features/alpine-node:0": {
-			"corepack": true,
-			"pnpmVersion": "9.5.0"
+		"ghcr.io/devcontainers-contrib/features/pnpm:2": {
+			"version": "9.5.0"
 		},
-		"ghcr.io/cirolosapio/devcontainers-features/alpine-curl:0": {},
-		"ghcr.io/cirolosapio/devcontainers-features/alpine-gh-cli:0": {},
-		"ghcr.io/cirolosapio/devcontainers-features/alpine-nano:0": {},
-		"ghcr.io/cirolosapio/devcontainers-features/alpine-starship:0": {}
+		"ghcr.io/devcontainers-contrib/features/starship:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers-contrib/features/act:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
 	"customizations": {
 		"vscode": {
@@ -52,13 +50,14 @@
 				"esbenp.prettier-vscode"
 			]
 		}
-	}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
+	"forwardPorts": [5173, 4173]
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",

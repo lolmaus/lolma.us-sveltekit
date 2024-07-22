@@ -62,7 +62,7 @@ const rollupPluginGenerateJsonFromMarkdown = (config: ParseMarkdownConfig): Plug
 				(file: MyFile): FrontMatterResultWithSlug<unknown> => {
 					return {
 						...Frontmatter(file.content),
-						fileName: file.fileName.replace(/\.md$/, '')
+						fileName: file.fileName.replace(/\.md$/, ''),
 					};
 				}
 			);
@@ -82,9 +82,9 @@ const rollupPluginGenerateJsonFromMarkdown = (config: ParseMarkdownConfig): Plug
 		name: 'rollup-plugin-parse-markdown',
 
 		configureServer(s) {
-      // Save the server instance for later use
-      server = s;
-    },
+			// Save the server instance for later use
+			server = s;
+		},
 
 		async buildStart() {
 			return generateJsonFromMarkdown();
@@ -97,14 +97,14 @@ const rollupPluginGenerateJsonFromMarkdown = (config: ParseMarkdownConfig): Plug
 			if (id.startsWith(sourceDir) && id.endsWith('.md')) {
 				await generateJsonFromMarkdown();
 
-        if (server) {
-          server.ws.send({
-            type: 'full-reload',
-            path: '*',
-          });
-        }
+				if (server) {
+					server.ws.send({
+						type: 'full-reload',
+						path: '*',
+					});
+				}
 			}
-		}
+		},
 	} satisfies Plugin;
 };
 
@@ -119,7 +119,7 @@ const readFiles = async (sourcePath: string): Promise<MyFile[]> => {
 			return {
 				fileName,
 				fullName,
-				content
+				content,
 			};
 		})
 	);
@@ -144,7 +144,7 @@ export const generateFiles = async (
 ) => {
 	const markdownCompiler = new MarkdownIt({
 		...(config.markdownItOptions ?? {}),
-		html: true
+		html: true,
 	});
 
 	const entities: Entity[] = frontMattersWithSlug.map(
@@ -165,7 +165,7 @@ export const generateFiles = async (
 				date,
 				lang,
 				slug,
-				urlName: date ? `${slug}-${date}` : slug
+				urlName: date ? `${slug}-${date}` : slug,
 			};
 		}
 	);

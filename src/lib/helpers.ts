@@ -5,4 +5,4 @@ import { twMerge } from 'tailwind-merge';
 // Also mentioned in https://webcache.googleusercontent.com/search?q=cache:https://madprofessor.blog/articles/combining-clsx-and-twmerge-to-create-cn-func/
 export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs));
-}
+};

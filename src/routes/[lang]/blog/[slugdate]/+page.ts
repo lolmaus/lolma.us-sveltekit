@@ -18,18 +18,12 @@ export const load = async ({ fetch, params }) => {
 		const { join } = await import('node:path');
 		const { promises } = await import('node:fs');
 		const cwd = process.cwd();
-		
-		const fullName = join(
-			cwd,
-			'static',
-			'content',
-			'blog-post',
-			`${date}-${lang}-${slug}.json`
-		);
+
+		const fullName = join(cwd, 'static', 'content', 'blog-post', `${date}-${lang}-${slug}.json`);
 
 		const jsonStr = await promises.readFile(fullName, 'utf8');
 		blogPostRaw = JSON.parse(jsonStr);
-	} else { 
+	} else {
 		// Client-side data loading via HTTP fetch
 		const fullName = `/content/blog-post/${date}-${lang}-${slug}.json`;
 		const response = await fetch(fullName);
@@ -40,6 +34,6 @@ export const load = async ({ fetch, params }) => {
 
 	return {
 		lang,
-		blogPost
+		blogPost,
 	};
 };

@@ -14,9 +14,9 @@ const config = {
 
 		prerender: {
 			crawl: false,
-			entries: crawlMarkdownEntries()
-		}
-	}
+			entries: crawlMarkdownEntries(),
+		},
+	},
 };
 
 export default config;

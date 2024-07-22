@@ -34,13 +34,15 @@
 	@apply h6;
 }
 
-.prose li, p {
+.prose li,
+p {
 	margin-top: 0.5em;
 }
 
-.prose ul, .prose ol {
+.prose ul,
+.prose ol {
 	margin-left: 2em;
-	list-style: disc outside
+	list-style: disc outside;
 }
 
 .prose-0 h2 {
@@ -62,7 +64,6 @@
 .prose-0 h6 {
 	@apply h5;
 }
-
 
 .prose-2 h1 {
 	@apply h2;
