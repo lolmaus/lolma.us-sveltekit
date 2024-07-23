@@ -1,22 +1,13 @@
-import { error } from '@sveltejs/kit';
-import { FluentBundle, FluentResource } from '@fluent/bundle';
-import { createSvelteFluent } from '@nubolab-ffwd/svelte-fluent';
+import { readOrFetchBlogPostIndex } from '$lib/data.js';
+import { initFluent } from '$lib/intl.js';
+import promiseHash from 'promise.hash.helper';
 
-export async function load({ params }) {
+export const load = async ({ params, fetch }) => {
 	const { lang } = params;
 
-	if (lang !== 'en' && lang !== 'ru') {
-		error(404, 'Not Found');
-	}
-
-	const bundle = new FluentBundle('en');
-	const { default: translations } = await import(`../../../content/translations/${lang}.ftl?raw`);
-	const resource = new FluentResource(translations);
-
-	bundle.addResource(resource);
-
-	return {
-		fluent: createSvelteFluent([bundle]),
+	return promiseHash({
+		blogPosts: readOrFetchBlogPostIndex(lang, fetch),
+		fluent: initFluent(lang),
 		lang,
-	};
-}
+	});
+};

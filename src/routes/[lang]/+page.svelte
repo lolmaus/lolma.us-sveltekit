@@ -16,7 +16,7 @@
 	</header>
 
 	<main class="border @container bp1000:w-1/2 bp1000:max-w-[1718px]">
-		<MainContent class="h-full" lang={data.lang} items={data.indexItems} />
+		<MainContent class="h-full" lang={data.lang} items={data.homeItems} />
 	</main>
 </div>
 

@@ -10,7 +10,7 @@ const markdownOptions = {
 			index: true,
 			htmlInIndex: false,
 		},
-		'index-item': {
+		'home-item': {
 			individual: false,
 			index: true,
 			htmlInIndex: true,
