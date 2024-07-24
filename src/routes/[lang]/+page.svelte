@@ -21,14 +21,14 @@
 
 <div class="relative min-h-screen w-full bp1000:flex bp1000:items-center">
 	<header
-		class="h-[80vh] @container max-bp1000:max-h-[100vw] bp1000:sticky bp1000:top-0 bp1000:h-[100vh] bp1000:w-1/2"
+		class="h-[80vh] max-bp1000:max-h-[100vw] bp1000:fixed bp1000:left-0 bp1000:top-0 bp1000:h-[100vh] bp1000:w-1/2"
 	>
 		<Hero class="h-full" />
 
 		<div></div>
 	</header>
 
-	<main class="@container bp1000:w-1/2 bp1000:max-w-[1718px]">
+	<main class="bp1000:ml-[50%] bp1000:w-1/2 bp1000:max-w-[1718px]">
 		<MainContent class="h-full" {lang} {homeItems} blogPosts={topPosts} />
 	</main>
 </div>

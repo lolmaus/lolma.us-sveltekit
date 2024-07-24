@@ -22,9 +22,9 @@
 	const itemsBySlug = $derived(keyBy(homeItems, 'slug'));
 </script>
 
-<div class={cn('space-y-8 p-12 @container', classes)} {...restProps}>
+<div class={cn('space-y-8 p-12', classes)} {...restProps}>
 	<div class="flex w-full flex-wrap items-start justify-stretch gap-12 space-y-0">
-		<div class="w-0 flex-grow basis-64 space-y-12">
+		<div class="w-0 flex-grow basis-[500px] space-y-12">
 			<a class="card card-hover block" href="/{lang}/resume">
 				<header class="aspect-h-1 aspect-w-3">
 					<img
@@ -88,7 +88,7 @@
 			</div>
 		</div>
 
-		<a class="card card-hover w-0 flex-grow basis-64" href="/{lang}/blog/sadf">
+		<a class="card card-hover w-0 flex-grow basis-[500px]" href="/{lang}/blog/sadf">
 			<header class="aspect-h-1 aspect-w-3">
 				<img
 					class="rounded-t object-cover object-center"
