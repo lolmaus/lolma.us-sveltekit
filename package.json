@@ -12,7 +12,8 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"prepare": "husky"
 	},
 	"devDependencies": {
 		"@fluent/bundle": "^0.18.0",
@@ -39,6 +40,8 @@
 		"eslint-plugin-svelte": "^2.43.0",
 		"front-matter": "^4.0.2",
 		"globals": "^15.8.0",
+		"husky": "^9.1.1",
+		"lint-staged": "^15.2.7",
 		"lodash-es": "^4.17.21",
 		"markdown-it": "^14.1.0",
 		"postcss": "^8.4.39",
