@@ -4,6 +4,8 @@
 
 <h1>Blog</h1>
 
+<a href="/{data.lang}/">Back</a>
+
 <ul>
 	{#each data.blogPosts as post}
 		<li>
