@@ -22,67 +22,73 @@
 	const itemsBySlug = $derived(keyBy(homeItems, 'slug'));
 </script>
 
-<div class={cn('space-y-8 p-12 @container', classes)} {...restProps}>
+<div class={cn('space-y-8 p-12', classes)} {...restProps}>
 	<div class="flex w-full flex-wrap items-start justify-stretch gap-12 space-y-0">
-		<a class="card card-hover w-0 flex-grow basis-64" href="/{lang}/resume">
-			<header class="aspect-h-1 aspect-w-3">
-				<img
-					class="rounded-t object-cover object-center"
-					src="https://preview.redd.it/7lf8pv72ox071.png?width=640&crop=smart&auto=webp&s=abec117db6c94ff3ba5a1c133ea1b380d9079f12"
-					alt="beautiful landscape and a racecar"
-				/>
-			</header>
-
-			<div class="prose prose-2 p-4">
-				<!-- ToDo: remove the if condition when ru resume is available -->
-				{#if itemsBySlug.resume}
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-					{@html itemsBySlug.resume.html}
-				{/if}
-			</div>
-		</a>
-
-		<div class="card w-0 flex-grow basis-64">
-			<a href="/{lang}/blog/" class="block transition-transform hover:scale-105">
+		<div class="w-0 flex-grow basis-[500px] space-y-12">
+			<a class="card card-hover block" href="/{lang}/resume">
 				<header class="aspect-h-1 aspect-w-3">
 					<img
 						class="rounded-t object-cover object-center"
-						src="https://preview.redd.it/njnqd082ox071.png?width=3440&format=png&auto=webp&s=281369f737625b114fe6b05a3b4a2255ea084ad4"
+						src="https://preview.redd.it/7lf8pv72ox071.png?width=640&crop=smart&auto=webp&s=abec117db6c94ff3ba5a1c133ea1b380d9079f12"
 						alt="beautiful landscape and a racecar"
 					/>
 				</header>
 
-				<h2
-					class="h3 mb-[-1px] border border-t-0 bg-surface-100 p-4 dark:border-surface-700 dark:bg-surface-800"
-				>
-					<Localized id="main-content--blog" /> →
+				<h2 class="h2 p-4 pb-0">
+					<Localized id="main-content--cv--title" /> →
 				</h2>
+
+				<div class="prose prose-2 p-4">
+					<!-- ToDo: remove the if condition when ru resume is available -->
+					{#if itemsBySlug.resume}
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html itemsBySlug.resume.html}
+					{/if}
+				</div>
 			</a>
 
-			<div>
-				<ul>
-					{#each blogPosts as post}
-						<li>
-							<a
-								href="/{lang}/blog/{post.urlName}"
-								class="my-[-1px] block border bg-surface-100 p-4 transition-transform last:rounded-b hover:scale-105 dark:border-surface-700 dark:bg-surface-800"
-							>
-								<h3 class="h5">
-									{post.attributes.title}
-								</h3>
+			<div class="">
+				<a href="/{lang}/blog/" class="card card-hover block">
+					<header class="aspect-h-1 aspect-w-3">
+						<img
+							class="rounded-t object-cover object-center"
+							src="https://preview.redd.it/njnqd082ox071.png?width=3440&format=png&auto=webp&s=281369f737625b114fe6b05a3b4a2255ea084ad4"
+							alt="beautiful landscape and a racecar"
+						/>
+					</header>
 
-								<p>
-									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-									{@html post.attributes.teaser}
-								</p>
-							</a>
-						</li>
-					{/each}
-				</ul>
+					<h2
+						class="h2 mb-[-1px] border border-t-0 bg-surface-100 p-4 dark:border-surface-700 dark:bg-surface-800"
+					>
+						<Localized id="main-content--blog--title" /> →
+					</h2>
+				</a>
+
+				<div>
+					<ul>
+						{#each blogPosts as post}
+							<li class="group">
+								<a
+									href="/{lang}/blog/{post.urlName}"
+									class="card card-hover block rounded-none p-4 group-last:rounded-b"
+								>
+									<h3 class="h5">
+										{post.attributes.title}
+									</h3>
+
+									<p>
+										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+										{@html post.attributes.teaser}
+									</p>
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</div>
 			</div>
 		</div>
 
-		<div class="card w-0 flex-grow basis-64">
+		<a class="card card-hover w-0 flex-grow basis-[500px]" href="/{lang}/blog/sadf">
 			<header class="aspect-h-1 aspect-w-3">
 				<img
 					class="rounded-t object-cover object-center"
@@ -91,7 +97,17 @@
 				/>
 			</header>
 
-			About
-		</div>
+			<h2 class="h2 p-4 pb-0">
+				<Localized id="main-content--about--title" /> →
+			</h2>
+
+			<div class="prose prose-2 p-4">
+				<!-- ToDo: remove the if condition when ru resume is available -->
+				{#if itemsBySlug['about-site']}
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					{@html itemsBySlug['about-site'].html}
+				{/if}
+			</div>
+		</a>
 	</div>
 </div>

@@ -39,10 +39,31 @@ p {
 	margin-top: 0.5em;
 }
 
+.prose h1:not(:first-child),
+.prose h2:not(:first-child),
+.prose h3:not(:first-child),
+.prose h4:not(:first-child),
+.prose h5:not(:first-child),
+.prose h6:not(:first-child) {
+	margin-top: 1em;
+}
+
 .prose ul,
 .prose ol {
 	margin-left: 2em;
 	list-style: disc outside;
+}
+
+.prose code {
+	@apply border;
+	@apply rounded;
+	@apply px-1;
+	@apply py-0.5;
+	@apply -my-0.5;
+	@apply border-surface-300;
+	@apply bg-surface-200;
+	@apply dark:border-surface-600;
+	@apply dark:bg-surface-700;
 }
 
 .prose-0 h2 {
