@@ -1,9 +1,22 @@
 <script lang="ts">
 	import Hero from '$lib/components/hero.svelte';
 	import MainContent from '$lib/components/main-content.svelte';
+	import type { BlogPostInIndex, Entity } from '$lib/entities.js';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 
-	export let data;
+	const { data } = $props();
+
+	const {
+		blogPosts,
+		homeItems,
+		lang,
+	}: {
+		blogPosts: BlogPostInIndex[];
+		homeItems: Entity[];
+		lang: string;
+	} = data;
+
+	const topPosts = $derived(blogPosts.slice(0, 3));
 </script>
 
 <div class="relative min-h-screen w-full bp1000:flex bp1000:items-center">
@@ -16,7 +29,7 @@
 	</header>
 
 	<main class="border @container bp1000:w-1/2 bp1000:max-w-[1718px]">
-		<MainContent class="h-full" lang={data.lang} items={data.homeItems} />
+		<MainContent class="h-full" {lang} {homeItems} blogPosts={topPosts} />
 	</main>
 </div>
 

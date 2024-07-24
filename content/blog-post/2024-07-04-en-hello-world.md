@@ -1,5 +1,6 @@
 ---
 title: Hello, world!
+teaser: Goodbye, <em>cruel</em> planet!
 ---
 
 # Good bye, cruel world. 😢
