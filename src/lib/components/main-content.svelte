@@ -72,6 +72,7 @@
 								</h3>
 
 								<p>
+									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 									{@html post.attributes.teaser}
 								</p>
 							</a>
