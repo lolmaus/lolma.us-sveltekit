@@ -1,5 +1,3 @@
-## ✨Available for hire!✨ →
-
 Please see my <span class="anchor">CV</span> for work experience, skills and goodies.
 
 TL/DR:
