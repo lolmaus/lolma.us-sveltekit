@@ -4,25 +4,21 @@ on:
   workflow_dispatch:
   pull_request:
   push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+      - name: Build and run dev container task
+        uses: devcontainers/ci@v0.3
         with:
-          run_install: false
-
-      # ToDo: use devcontainers/ci@v0.3 to reuse the devcontainer
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - run: pnpm i
-      - run: pnpm run lint
-      - run: pnpm run build
+          # Change this to be your CI task/script
+          runCmd: |
+            pnpm i
+            pnpm run lint
+            pnpm run build
