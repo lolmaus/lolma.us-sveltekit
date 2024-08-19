@@ -26,7 +26,8 @@
 			<Localized id="index--title" />
 		</h1>
 
-		<p class="gradient-heading h1">@lolmaus</p>
+		<!-- Bottom patting is necessary to work around a werid text clipping isseu -->
+		<p class="gradient-heading h1 py-1">@lolmaus</p>
 
 		<p class="h3">
 			<Localized id="index--subtitle" />

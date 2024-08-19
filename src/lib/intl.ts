@@ -7,7 +7,7 @@ export const initFluent = async (lang: string): Promise<SvelteFluent> => {
 		error(404, 'Not Found');
 	}
 
-	const bundle = new FluentBundle('en');
+	const bundle = new FluentBundle(lang);
 	const { default: translations } = await import(`../../content/translations/${lang}.ftl?raw`);
 	const resource = new FluentResource(translations);
 
