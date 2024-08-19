@@ -50,7 +50,7 @@
 </svelte:head>
 
 <div
-	class="cursor-pointer"
+	class="variant-soft btn-icon btn-lg cursor-pointer bg-surface-500 text-white opacity-50 hover:opacity-100"
 	onclick={onToggleHandler}
 	onkeydown={onKeyDown}
 	role="switch"
@@ -60,8 +60,8 @@
 	tabindex="0"
 >
 	{#if $modeCurrent}
-		<Moon size={50} />
+		<Moon size={30} />
 	{:else}
-		<Sun size={50} />
+		<Sun size={30} />
 	{/if}
 </div>
